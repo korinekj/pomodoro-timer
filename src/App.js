@@ -4,6 +4,8 @@ import AppHeader from "./AppHeader";
 import BreakLength from "./BreakLength";
 import SessionLength from "./SessionLength";
 import Timer from "./Session";
+import TimerControl from "./TimerControl";
+import Author from "./Author";
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
       <BreakLength />
       <SessionLength />
       <Timer />
+      <TimerControl />
+      <Author />
     </AppContainer>
   );
 }

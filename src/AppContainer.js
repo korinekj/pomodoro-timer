@@ -4,6 +4,7 @@ function AppContainer(props) {
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
 
+  //kód který mi zajistí, že všechny Children AppContaineru budou mít přístup ke stavu! //
   const updateChildrenWithProps = React.Children.map(
     props.children,
     (child) => {
