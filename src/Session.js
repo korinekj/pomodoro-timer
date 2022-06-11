@@ -1,12 +1,6 @@
-import { useState } from "react";
-
 function SessionTimer(props) {
-  const minutes = props.session;
-
-  // PŘEVOD NA MM:SS FORMÁT
-  const MMSS = new Date(minutes * 60 * 1000).toString().substring(19, 24);
-
-  const [length, setLength] = useState(props.session);
+  // PŘEVOD z minut NA MM:SS FORMÁT
+  const MMSS = new Date(props.session * 60 * 1000).toString().substring(19, 24);
 
   return (
     <div className="timer">

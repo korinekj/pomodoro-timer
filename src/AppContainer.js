@@ -42,6 +42,11 @@ function AppContainer(props) {
     setSessionLength(initialSessionLength);
   };
 
+  /**
+   * FUNKCE start timer
+   */
+  const startTimer = () => {};
+
   //kód který mi zajistí, že všechny Children AppContaineru budou mít přístup ke stavu! //
   const updateChildrenWithProps = React.Children.map(
     props.children,
@@ -58,6 +63,7 @@ function AppContainer(props) {
           dec: decSession,
         },
         reset: resetToDefaultState,
+        start: startTimer,
       });
     }
   );
