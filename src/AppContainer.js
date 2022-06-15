@@ -1,3 +1,4 @@
+import { clear } from "@testing-library/user-event/dist/clear";
 import React, { useState } from "react";
 
 function AppContainer(props) {
@@ -6,7 +7,8 @@ function AppContainer(props) {
 
   const [breakLength, setBreakLength] = useState(initialBreakLength);
   const [sessionLength, setSessionLength] = useState(initialSessionLength);
-  let [countdown, setCountdown] = useState(sessionLength);
+  let [countdown, setCountdown] = useState(sessionLength + ":00");
+  let [paused, setPause] = useState(false);
 
   /**
    * 4 Funkce na přidávání a ubírání délky trvání přestávky a sezení
@@ -27,7 +29,7 @@ function AppContainer(props) {
     if (sessionLength < 60) {
       const newSessionLength = sessionLength + 1;
       setSessionLength(newSessionLength);
-      setCountdown(newSessionLength);
+      setCountdown(newSessionLength + ":00");
     }
   };
 
@@ -35,7 +37,7 @@ function AppContainer(props) {
     if (sessionLength > 1) {
       const newSessionLength = sessionLength - 1;
       setSessionLength(newSessionLength);
-      setCountdown(newSessionLength);
+      setCountdown(newSessionLength + ":00");
     }
   };
 
@@ -54,20 +56,25 @@ function AppContainer(props) {
    */
   const startTimer = () => {
     let time = sessionLength * 60;
+    let timer;
 
-    const startCountdown = () => {
-      time--;
-      const minutes = Math.floor(time / 60);
-      let seconds = time % 60;
+    if (paused === false) {
+      timer = setInterval(startCountdown, 1000);
 
-      setCountdown(`${minutes}:${seconds}`);
+      function startCountdown() {
+        setPause(!paused);
+        console.log("COUNTING");
+        time--;
+        const minutes = Math.floor(time / 60);
+        let seconds = time % 60;
 
-      if (seconds === 0) {
-        clearInterval(timer);
+        setCountdown(`${minutes}:${seconds}`);
+
+        if (seconds === 50) {
+          clearInterval(timer);
+        }
       }
-    };
-
-    const timer = window.setInterval(startCountdown, 1000);
+    }
   };
 
   //kód který mi zajistí, že všechny Children AppContaineru budou mít přístup ke stavu! //

@@ -1,8 +1,8 @@
 function SessionTimer(props) {
   // PŘEVOD z minut NA MM:SS FORMÁT
-  const MMSS = new Date(props.countdown * 60 * 1000)
-    .toString()
-    .substring(19, 24);
+  // const MMSS = new Date(props.countdown * 60 * 1000)
+  //   .toString()
+  //   .substring(19, 24);
 
   return (
     <div className="timer">
