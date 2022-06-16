@@ -7,7 +7,7 @@ function AppContainer(props) {
 
   const [breakLength, setBreakLength] = useState(initialBreakLength);
   const [sessionLength, setSessionLength] = useState(initialSessionLength);
-  let [countdown, setCountdown] = useState(sessionLength + ":00");
+  let [countdown, setCountdown] = useState(`25:00`);
   let [paused, setPause] = useState(false);
 
   /**
@@ -55,25 +55,24 @@ function AppContainer(props) {
    * FUNKCE ZAČÁTEK ODPOČET
    */
   const startTimer = () => {
-    let time = sessionLength * 60;
+    let timeInSeconds = sessionLength * 60;
     let timer;
 
-    if (paused === false) {
-      timer = setInterval(startCountdown, 1000);
+    timer = setInterval(startCountdown, 1000);
 
-      function startCountdown() {
-        setPause(!paused);
-        console.log("COUNTING");
-        time--;
-        const minutes = Math.floor(time / 60);
-        let seconds = time % 60;
+    function startCountdown() {
+      console.log("COUNTING");
 
-        setCountdown(`${minutes}:${seconds}`);
+      let minutes = Math.floor(timeInSeconds / 60);
+      let seconds = timeInSeconds % 60;
 
-        if (seconds === 50) {
-          clearInterval(timer);
-        }
+      setCountdown(`${minutes}:${seconds}`);
+
+      if (seconds === 50) {
+        clearInterval(timer);
       }
+
+      timeInSeconds--;
     }
   };
 
