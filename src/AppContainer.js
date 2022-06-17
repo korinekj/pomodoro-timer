@@ -8,7 +8,9 @@ function AppContainer(props) {
   const [breakLength, setBreakLength] = useState(initialBreakLength);
   const [sessionLength, setSessionLength] = useState(initialSessionLength);
   let [countdown, setCountdown] = useState(`25:00`);
-  let [paused, setPause] = useState(false);
+  let [running, setRunning] = useState(false);
+  let [timerLabel, setTimerLabel] = useState("Session");
+  const [timerId, setTimerId] = useState(undefined);
 
   /**
    * 4 Funkce na přidávání a ubírání délky trvání přestávky a sezení
@@ -48,33 +50,38 @@ function AppContainer(props) {
     const resetSessionLength = 25;
     setBreakLength(initialBreakLength);
     setSessionLength(resetSessionLength);
-    setCountdown(resetSessionLength);
+    setCountdown(resetSessionLength + ":00");
   };
 
   /**
    * FUNKCE ZAČÁTEK ODPOČET
    */
-  const startTimer = () => {
+  function startTimer() {
+    console.log("TIMER START");
+    setRunning(!running);
+
     let timeInSeconds = sessionLength * 60;
-    let timer;
 
-    timer = setInterval(startCountdown, 1000);
-
-    function startCountdown() {
-      console.log("COUNTING");
-
+    let timerId = setInterval(() => {
       let minutes = Math.floor(timeInSeconds / 60);
       let seconds = timeInSeconds % 60;
-
       setCountdown(`${minutes}:${seconds}`);
-
-      if (seconds === 50) {
-        clearInterval(timer);
-      }
-
       timeInSeconds--;
-    }
-  };
+    }, 1000);
+
+    setTimerId(timerId);
+  }
+
+  /**
+   * FUNKCE PAUSE ODPOČET
+   */
+  function pauseTimer() {
+    console.log("TIMER PAUSED");
+
+    setRunning(!running);
+
+    clearInterval(timerId);
+  }
 
   //kód který mi zajistí, že všechny Children AppContaineru budou mít přístup ke stavu! //
   const updateChildrenWithProps = React.Children.map(
@@ -93,7 +100,7 @@ function AppContainer(props) {
           dec: decSession,
         },
         reset: resetToDefaultState,
-        start: startTimer,
+        start: running === false ? startTimer : pauseTimer,
       });
     }
   );
