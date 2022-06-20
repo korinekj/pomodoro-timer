@@ -7,9 +7,9 @@ function AppContainer(props) {
 
   const [breakLength, setBreakLength] = useState(initialBreakLength);
   const [sessionLength, setSessionLength] = useState(initialSessionLength);
-  let [countdown, setCountdown] = useState(`25:00`);
-  let [running, setRunning] = useState(false);
-  let [timerLabel, setTimerLabel] = useState("Session");
+  const [countdown, setCountdown] = useState(`25:00`);
+  const [running, setRunning] = useState(false);
+  const [timerLabel, setTimerLabel] = useState("Session");
   const [timerId, setTimerId] = useState(undefined);
 
   /**
@@ -42,6 +42,7 @@ function AppContainer(props) {
       const newSessionLength = sessionLength - 1;
       const newCountDownLength =
         sessionLength - 1 < 10 ? "0" + (sessionLength - 1) : sessionLength - 1;
+
       setSessionLength(newSessionLength);
       setCountdown(newCountDownLength + ":00");
     }
@@ -63,9 +64,11 @@ function AppContainer(props) {
   /**
    * FUNKCE ZAČÁTEK ODPOČET
    */
+
   function startTimer() {
     console.log("TIMER START");
     setRunning(!running);
+    setTimerLabel("Session");
     console.log(sessionLength);
     console.log(countdown.substring(0, 2));
 
@@ -74,12 +77,12 @@ function AppContainer(props) {
       parseInt(countdown.substring(3));
     console.log(timeInSeconds);
 
-    let timerId = setInterval(() => {
-      let minutes =
+    const timerId = setInterval(() => {
+      const minutes =
         Math.floor(timeInSeconds / 60) < 10
           ? "0" + Math.floor(timeInSeconds / 60)
           : Math.floor(timeInSeconds / 60);
-      let seconds =
+      const seconds =
         timeInSeconds % 60 < 10
           ? "0" + (timeInSeconds % 60)
           : timeInSeconds % 60;
@@ -88,8 +91,34 @@ function AppContainer(props) {
 
       console.log(timeInSeconds, timerId);
 
+      //BREAK
       if (timeInSeconds < 0) {
         clearInterval(timerId);
+
+        setTimerLabel("Break");
+
+        let timeInSeconds = breakLength * 60;
+
+        const timerIdBreak = setInterval(() => {
+          const minutes =
+            Math.floor(timeInSeconds / 60) < 10
+              ? "0" + Math.floor(timeInSeconds / 60)
+              : Math.floor(timeInSeconds / 60);
+          const seconds =
+            timeInSeconds % 60 < 10
+              ? "0" + (timeInSeconds % 60)
+              : timeInSeconds % 60;
+          setCountdown(`${minutes}:${seconds}`);
+          timeInSeconds--;
+
+          console.log(timeInSeconds, timerIdBreak);
+
+          if (timeInSeconds < 0) {
+            clearInterval(timerIdBreak);
+            setTimeout(startTimer, 1000);
+          }
+        }, 1000);
+        setTimerId(timerIdBreak);
       }
     }, 1000);
 
