@@ -1,4 +1,3 @@
-import { clear } from "@testing-library/user-event/dist/clear";
 import React, { useState } from "react";
 
 function AppContainer(props) {
@@ -92,7 +91,7 @@ function AppContainer(props) {
       console.log(timeInSeconds, timerId);
 
       //BREAK
-      if (timeInSeconds < 0) {
+      if (timeInSeconds < 50) {
         clearInterval(timerId);
 
         setTimerLabel("Break");
@@ -113,9 +112,9 @@ function AppContainer(props) {
 
           console.log(timeInSeconds, timerIdBreak);
 
-          if (timeInSeconds < 0) {
+          if (timeInSeconds < 50) {
             clearInterval(timerIdBreak);
-            setTimeout(startTimer, 1000);
+            setTimeout(startTimer, 0);
           }
         }, 1000);
         setTimerId(timerIdBreak);
