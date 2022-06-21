@@ -10,6 +10,7 @@ function AppContainer(props) {
   const [running, setRunning] = useState(false);
   const [timerLabel, setTimerLabel] = useState("Session");
   const [timerId, setTimerId] = useState(undefined);
+  const [runTimes, setRunTimes] = useState(0);
 
   /**
    * 4 Funkce na přidávání a ubírání délky trvání přestávky a sezení
@@ -51,10 +52,10 @@ function AppContainer(props) {
    * FUNKCE na resetování do původního stavu (délka přestávky a sezení)
    */
   const resetToDefaultState = () => {
-    const resetSessionLength = 25;
     setBreakLength(initialBreakLength);
-    setSessionLength(resetSessionLength);
-    setCountdown(resetSessionLength + ":00");
+    setSessionLength(initialSessionLength);
+    setCountdown(initialSessionLength + ":00");
+    setTimerLabel("Session");
     clearInterval(timerId);
     setTimerId(undefined);
     setRunning(false);
@@ -65,18 +66,29 @@ function AppContainer(props) {
    */
 
   function startTimer() {
+    let timeInSeconds;
+
+    timeInSeconds =
+      parseInt(countdown.substring(0, 2) * 60) +
+      parseInt(countdown.substring(3));
+
+    // timeInSeconds = sessionLength * 60;
+    // console.log(timeInSeconds);
+
     console.log("TIMER START");
     setRunning(!running);
     setTimerLabel("Session");
-    console.log(sessionLength);
-    console.log(countdown.substring(0, 2));
 
-    let timeInSeconds =
-      parseInt(countdown.substring(0, 2) * 60) +
-      parseInt(countdown.substring(3));
-    console.log(timeInSeconds);
+    console.log(runTimes);
 
+    //NEFUNGUJE JELIKOŽ RUNTIMES JE FURT NULA...TAKŽE FURT ODEČÍTÁ A PAK TO O SEKUNDU NEFUNGUJE
+    if (runTimes === 0) {
+      timeInSeconds--;
+    }
+
+    //Session
     const timerId = setInterval(() => {
+      console.log(timeInSeconds, timerId);
       const minutes =
         Math.floor(timeInSeconds / 60) < 10
           ? "0" + Math.floor(timeInSeconds / 60)
@@ -86,35 +98,39 @@ function AppContainer(props) {
           ? "0" + (timeInSeconds % 60)
           : timeInSeconds % 60;
       setCountdown(`${minutes}:${seconds}`);
+
       timeInSeconds--;
 
-      console.log(timeInSeconds, timerId);
-
       //BREAK
-      if (timeInSeconds < 50) {
+      if (timeInSeconds < 0) {
         clearInterval(timerId);
 
         setTimerLabel("Break");
+        console.log(timerLabel);
 
-        let timeInSeconds = breakLength * 60;
+        let breakTimeInSeconds = breakLength * 60;
 
         const timerIdBreak = setInterval(() => {
+          console.log(breakTimeInSeconds, timerIdBreak);
           const minutes =
-            Math.floor(timeInSeconds / 60) < 10
-              ? "0" + Math.floor(timeInSeconds / 60)
-              : Math.floor(timeInSeconds / 60);
+            Math.floor(breakTimeInSeconds / 60) < 10
+              ? "0" + Math.floor(breakTimeInSeconds / 60)
+              : Math.floor(breakTimeInSeconds / 60);
           const seconds =
-            timeInSeconds % 60 < 10
-              ? "0" + (timeInSeconds % 60)
-              : timeInSeconds % 60;
+            breakTimeInSeconds % 60 < 10
+              ? "0" + (breakTimeInSeconds % 60)
+              : breakTimeInSeconds % 60;
           setCountdown(`${minutes}:${seconds}`);
-          timeInSeconds--;
 
-          console.log(timeInSeconds, timerIdBreak);
+          breakTimeInSeconds--;
 
-          if (timeInSeconds < 50) {
+          if (breakTimeInSeconds < 0) {
             clearInterval(timerIdBreak);
-            setTimeout(startTimer, 0);
+
+            //ZDE DODĚLAT ABY TO KURVA UPDATNULO
+            //setRunTimes(runTimes + 1);
+
+            setTimeout(startTimer, 1000);
           }
         }, 1000);
         setTimerId(timerIdBreak);
