@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function AppContainer(props) {
   const initialBreakLength = 5;
@@ -10,7 +10,6 @@ function AppContainer(props) {
   const [running, setRunning] = useState(false);
   const [timerLabel, setTimerLabel] = useState("Session");
   const [timerId, setTimerId] = useState(undefined);
-  const [runTimes, setRunTimes] = useState(0);
 
   /**
    * 4 Funkce na přidávání a ubírání délky trvání přestávky a sezení
@@ -66,25 +65,25 @@ function AppContainer(props) {
    */
 
   function startTimer() {
-    let timeInSeconds;
-
-    timeInSeconds =
-      parseInt(countdown.substring(0, 2) * 60) +
-      parseInt(countdown.substring(3));
-
-    // timeInSeconds = sessionLength * 60;
-    // console.log(timeInSeconds);
-
+    console.log(countdown);
     console.log("TIMER START");
     setRunning(!running);
     setTimerLabel("Session");
 
-    console.log(runTimes);
+    let timeInSeconds;
+    timeInSeconds =
+      parseInt(countdown.substring(0, 2) * 60) +
+      parseInt(countdown.substring(3));
 
-    //NEFUNGUJE JELIKOŽ RUNTIMES JE FURT NULA...TAKŽE FURT ODEČÍTÁ A PAK TO O SEKUNDU NEFUNGUJE
-    if (runTimes === 0) {
+    if (!startTimer.didrun) {
+      console.log("test");
+      startTimer.didrun = true;
       timeInSeconds--;
+    } else {
+      console.log("Haha");
     }
+
+    console.log(timeInSeconds);
 
     //Session
     const timerId = setInterval(() => {
@@ -105,8 +104,7 @@ function AppContainer(props) {
       if (timeInSeconds < 0) {
         clearInterval(timerId);
 
-        setTimerLabel("Break");
-        console.log(timerLabel);
+        setTimerLabel(() => "Break");
 
         let breakTimeInSeconds = breakLength * 60;
 
@@ -126,9 +124,6 @@ function AppContainer(props) {
 
           if (breakTimeInSeconds < 0) {
             clearInterval(timerIdBreak);
-
-            //ZDE DODĚLAT ABY TO KURVA UPDATNULO
-            //setRunTimes(runTimes + 1);
 
             setTimeout(startTimer, 1000);
           }
