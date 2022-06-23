@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function AppContainer(props) {
   const initialBreakLength = 5;
@@ -10,6 +10,13 @@ function AppContainer(props) {
   const [running, setRunning] = useState(false);
   const [timerLabel, setTimerLabel] = useState("Session");
   const [timerId, setTimerId] = useState(undefined);
+
+  //zajistí update state v setintervalu
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef();
+  useEffect(() => {
+    pausedRef.current = paused;
+  });
 
   /**
    * 4 Funkce na přidávání a ubírání délky trvání přestávky a sezení
@@ -65,29 +72,36 @@ function AppContainer(props) {
    */
 
   function startTimer() {
-    console.log(countdown);
-    console.log("TIMER START");
-    setRunning(!running);
-    setTimerLabel("Session");
+    console.log("TIMER START", paused, pausedRef.current);
 
     let timeInSeconds;
-    timeInSeconds =
-      parseInt(countdown.substring(0, 2) * 60) +
-      parseInt(countdown.substring(3));
+    console.log(countdown);
 
-    if (!startTimer.didrun) {
-      console.log("test");
-      startTimer.didrun = true;
-      timeInSeconds--;
+    if (pausedRef.current) {
+      timeInSeconds =
+        parseInt(countdown.substring(0, 2) * 60) +
+        parseInt(countdown.substring(3));
     } else {
-      console.log("Haha");
+      timeInSeconds = sessionLength * 60;
     }
 
-    console.log(timeInSeconds);
+    setRunning(!running);
+
+    setTimerLabel("Session");
+
+    /**
+     *  zjisti zda je funkce spuštěna poprvé -> poprvé chci snížit rovnou o sekundu ->
+                důvod: setInterval 1000ms zavolá funkci až vteřinu od stisknutí
+        já ale chci při prvním stisku začít odpočet ihned
+        při druhém spuštění už chci začínat odpočet normálně od hodnoty, která je v session length
+     */
+    if (!startTimer.didrun) {
+      startTimer.didrun = true;
+      timeInSeconds--;
+    }
 
     //Session
     const timerId = setInterval(() => {
-      console.log(timeInSeconds, timerId);
       const minutes =
         Math.floor(timeInSeconds / 60) < 10
           ? "0" + Math.floor(timeInSeconds / 60)
@@ -104,12 +118,12 @@ function AppContainer(props) {
       if (timeInSeconds < 0) {
         clearInterval(timerId);
 
-        setTimerLabel(() => "Break");
+        setTimerLabel("Break");
+        console.log(timerLabel);
 
         let breakTimeInSeconds = breakLength * 60;
 
         const timerIdBreak = setInterval(() => {
-          console.log(breakTimeInSeconds, timerIdBreak);
           const minutes =
             Math.floor(breakTimeInSeconds / 60) < 10
               ? "0" + Math.floor(breakTimeInSeconds / 60)
@@ -125,6 +139,8 @@ function AppContainer(props) {
           if (breakTimeInSeconds < 0) {
             clearInterval(timerIdBreak);
 
+            setPaused((pausedRef.current = false));
+
             setTimeout(startTimer, 1000);
           }
         }, 1000);
@@ -139,8 +155,9 @@ function AppContainer(props) {
    * FUNKCE PAUSE ODPOČET
    */
   function pauseTimer() {
-    console.log("TIMER PAUSED");
+    console.log("TIMER PAUSED", timerId);
     setRunning(!running);
+    setPaused((pausedRef.current = true));
 
     clearInterval(timerId);
   }
