@@ -6,6 +6,10 @@ function SessionTimer(props) {
 
   return (
     <div className="timer">
+      <audio
+        id="beep"
+        src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+      ></audio>
       <div id="timer-label">{props.timerLabel}</div>
       <div id="time-left">{props.countdown}</div>
       {/* ZDE TO ZPOMALUJE TO TESTOVÁNÍ (FCC RUN TESTS) */}

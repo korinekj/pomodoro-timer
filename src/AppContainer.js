@@ -58,6 +58,7 @@ function AppContainer(props) {
    * FUNKCE na resetování do původního stavu (délka přestávky a sezení)
    */
   const resetToDefaultState = () => {
+    stop();
     setBreakLength(initialBreakLength);
     setSessionLength(initialSessionLength);
     setCountdown(initialSessionLength + ":00");
@@ -116,6 +117,7 @@ function AppContainer(props) {
 
       //BREAK
       if (timeInSeconds < 0) {
+        play();
         clearInterval(timerId);
 
         setTimerLabel("Break");
@@ -137,6 +139,7 @@ function AppContainer(props) {
           breakTimeInSeconds--;
 
           if (breakTimeInSeconds < 0) {
+            play();
             clearInterval(timerIdBreak);
 
             setPaused((pausedRef.current = false));
@@ -160,6 +163,25 @@ function AppContainer(props) {
     setPaused((pausedRef.current = true));
 
     clearInterval(timerId);
+  }
+
+  /**
+   * FUNKCE PŘEHRÁVÁNÍ ZVUKU PŘI DOSAŽENÍ 00:00 při odpočtu
+   */
+  function play() {
+    const audio = document.getElementById("beep");
+
+    audio.play();
+  }
+
+  /**
+   * FUNKCE NA RESETOVÁNÍ AUDIA DO VÝCHOZÍHO STAVU (když audio začne hrát, tak pokud někde vyvolám tuto funkci, zvuk se přeruší a "přetočí" na začátek)
+   */
+  function stop() {
+    const audio = document.getElementById("beep");
+
+    audio.pause();
+    audio.src = audio.src;
   }
 
   //kód který mi zajistí, že všechny Children AppContaineru budou mít přístup ke stavu! //
