@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPause,
+  faArrowsRotate,
+} from "@fortawesome/free-solid-svg-icons";
 
 function TimerControl(props) {
   return (
     <div className="timer-control">
       <button id="start_stop" onClick={props.start}>
-        Start_Pause
+        <FontAwesomeIcon icon={faPlay} />
+        <FontAwesomeIcon icon={faPause} />
       </button>
       <button id="reset" onClick={props.reset}>
-        Reset
+        <FontAwesomeIcon icon={faArrowsRotate} />
       </button>
     </div>
   );

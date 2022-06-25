@@ -3,6 +3,8 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background: #1e555c;
+  color: white;
 }
 
 .app {
@@ -11,19 +13,59 @@
   font-size: 30px;
 }
 
+.appName h1 {
+  color: darkgrey;
+}
+
 .length-control {
   display: inline-block;
-  margin-left: 10px;
+  padding: 0 20px;
+}
+
+#session-length,
+#break-length {
+  margin: 0 5px;
 }
 
 .timer {
-  border: 5px solid black;
+  border: 5px solid darkgray;
   border-radius: 40px;
   margin: 10px auto;
-  width: 220px;
+  width: 40%;
+  padding: 20px;
+}
+
+#time-left {
+  font-size: 50px;
+  font-weight: 400;
+}
+
+.timer-control {
+  margin-top: -10px;
 }
 
 .author {
   font-size: 15px;
-  margin-top: 15px;
+  margin-top: 20px;
+  color: darkgray;
+}
+
+.author a {
+  font-size: 20px;
+  color: cyan;
+}
+
+button {
+  padding: 0 20px;
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.timer-control button {
+  padding: 0;
+  margin: 10px 10px;
+  font-size: 30px;
 }
