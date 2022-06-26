@@ -7,6 +7,26 @@ function SessionTimer(props) {
   //   .toString()
   //   .substring(19, 24);
 
+  /**
+   * Pokud se časovač dostane pod 1 minutu, zbývající čas se bude zobrazovat červenou barvou
+   */
+
+  //
+  // if (props.countdown === "00:59") {
+  // }
+  // if (props.countdown === "00:00") {
+  //   document.getElementById("time-left").classList.remove("red-timer");
+  // }
+
+  switch (props.countdown) {
+    case "00:59":
+      document.getElementById("time-left").classList.add("red-timer");
+      break;
+    case "00:00":
+      document.getElementById("time-left").classList.remove("red-timer");
+      break;
+  }
+
   return (
     <div className="timer">
       <FontAwesomeIcon icon={faStopwatch} />

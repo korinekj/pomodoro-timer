@@ -69,3 +69,7 @@ button {
   margin: 10px 10px;
   font-size: 30px;
 }
+
+.red-timer {
+  color: red;
+}

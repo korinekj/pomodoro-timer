@@ -66,6 +66,7 @@ function AppContainer(props) {
     clearInterval(timerId);
     setTimerId(undefined);
     setRunning(false);
+    document.getElementById("time-left").classList.remove("red-timer");
   };
 
   /**
